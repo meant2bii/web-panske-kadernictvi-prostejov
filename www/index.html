@@ -29,6 +29,8 @@
     .hero[data-has-update="true"] .badge i{background:#ef9c45;box-shadow:0 0 14px rgba(239,156,69,.8)}
     .notice-cycle{animation:notice-cycle 6.5s var(--ease) both!important}.notice-cycle em{color:var(--ice)}
     @keyframes notice-cycle{0%{opacity:0;transform:translateY(14px)}18%,76%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
+    .feature-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.65rem;width:100%}.feature-tag{display:inline-flex;align-items:center;gap:.55rem;min-height:2.75rem;padding:.62rem .9rem;border:1px solid var(--border);border-radius:999px;background:rgba(207,220,233,.10);color:var(--heading);font-size:.82rem;font-weight:500;backdrop-filter:blur(12px);white-space:nowrap}.feature-tag svg{width:1.12rem;height:1.12rem;stroke:var(--ice);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.callout{max-width:37rem}
+    @media(min-width:640px){.feature-tag{min-height:3rem;padding:.7rem 1rem;font-size:.9rem}}
   </style>
 </head>
 <body>
@@ -67,6 +69,52 @@
     const defaultSubtitle='Poctivá péče o vlasy i vousy, příjemná atmosféra a férové ceny. Přijďte bez objednání kdykoliv během otevírací doby, rezervace nepřijímáme. Platba pouze v hotovosti.';
     const periodLabel=(start,end)=>start===end?formatDate(start):`${formatDate(start)}–${formatDate(end)}`;
     setTimeout(()=>fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const active=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now);const heading=document.querySelector('#uvod-title'),subtitle=document.querySelector('.subtitle'),badge=document.querySelector('.badge'),hero=document.querySelector('.hero');if(!active.length){subtitle.textContent=defaultSubtitle;return}hero.dataset.hasUpdate='true';badge.innerHTML=`<i></i> ${active[0].title||'Změna otevírací doby'}`;let index=0;const showChange=()=>{const item=active[index],parts=item.text.split(':');heading.classList.remove('notice-cycle');subtitle.classList.remove('notice-cycle');heading.innerHTML=parts.length>1?`${parts.shift()}: <em>${parts.join(':').trim()}</em>`:item.text;subtitle.textContent=`${periodLabel(item.from||item.date,item.until||item.date)} · Otevírací doba: ${item.hours||'dle sdělení'}`;void heading.offsetWidth;heading.classList.add('notice-cycle');subtitle.classList.add('notice-cycle');index=(index+1)%active.length};showChange();if(active.length>1)setInterval(showChange,6500)}).catch(()=>{document.querySelector('.subtitle').textContent=defaultSubtitle}),250);
+  </script>
+  <script>
+    // Hero: samostatný, odolný řadič provozních změn.
+    (() => {
+      const fallbackText = 'Jsme klasické pánské kadeřnictví, které si na nic nehraje. Nedostanete u nás panáka whiskey ani horký ručník, za to Vás ostříháme v přijatelném čase a za přijatelnou cenu. Těšíme se na Vaši návštěvu.';
+      const format = value => new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric.', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
+      const period = (from, until) => from === until ? format(from) : `${format(from)}–${format(until)}`;
+      const featureTags = `<div class="feature-tags">
+        <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg>Bez objednání</span>
+        <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.2"/><path d="M6 9h.01M18 15h.01"/></svg>Pouze hotovost</span>
+        <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="18" r="3"/><circle cx="11" cy="5" r="1.6"/><path d="M11 8v5h4l3 4M7 15h5l-2-4"/></svg>Bezbariérové</span>
+        <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16l1.5-5h13L20 16"/><path d="M3 16h18v3H3z"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/><path d="M7 11l1.5-3h7L17 11"/></svg>Parkování</span>
+      </div>`;
+      const start = async () => {
+        const heading = document.querySelector('#uvod-title');
+        const subtitle = document.querySelector('.subtitle');
+        const badge = document.querySelector('.badge');
+        const hero = document.querySelector('.hero');
+        const callout = document.querySelector('.callout');
+        if (callout) callout.innerHTML = featureTags;
+        try {
+          const response = await fetch('data/provozni-zmeny.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error('Provozní změny nelze načíst.');
+          const items = await response.json();
+          const today = new Date(); today.setHours(0, 0, 0, 0);
+          const active = items.filter(item => !item.until || new Date(`${item.until}T23:59:59`) >= today);
+          if (!active.length) { subtitle.textContent = fallbackText; return; }
+          hero.dataset.hasUpdate = 'true';
+          badge.innerHTML = `<i></i> ${active[0].title || 'Změna otevírací doby'}`;
+          let position = 0;
+          const render = () => {
+            const item = active[position];
+            const parts = item.text.split(':');
+            heading.classList.remove('notice-cycle'); subtitle.classList.remove('notice-cycle');
+            heading.innerHTML = parts.length > 1 ? `${parts.shift()}: <em>${parts.join(':').trim()}</em>` : item.text;
+            subtitle.textContent = `${period(item.from || item.date, item.until || item.date)} · Otevírací doba: ${item.hours || 'dle sdělení'}`;
+            void heading.offsetWidth;
+            heading.classList.add('notice-cycle'); subtitle.classList.add('notice-cycle');
+            position = (position + 1) % active.length;
+          };
+          render();
+          if (active.length > 1) window.setInterval(render, 6500);
+        } catch (error) { subtitle.textContent = fallbackText; }
+      };
+      window.addEventListener('load', () => window.setTimeout(start, 50), { once: true });
+    })();
   </script>
 </body>
 </html>
