@@ -31,6 +31,10 @@
     @keyframes notice-cycle{0%{opacity:0;transform:translateY(14px)}18%,76%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
     .feature-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.65rem;width:100%}.feature-tag{display:inline-flex;align-items:center;gap:.55rem;min-height:2.75rem;padding:.62rem .9rem;border:1px solid var(--border);border-radius:999px;background:rgba(207,220,233,.10);color:var(--heading);font-size:.82rem;font-weight:500;backdrop-filter:blur(12px);white-space:nowrap}.feature-tag svg{width:1.12rem;height:1.12rem;stroke:var(--ice);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.callout{max-width:37rem}
     @media(min-width:640px){.feature-tag{min-height:3rem;padding:.7rem 1rem;font-size:.9rem}}
+    .hero h1 .notice-date{display:block;margin-bottom:.2em;color:var(--heading);font-size:.48em;letter-spacing:-.025em;line-height:1.12}.hero h1 .notice-value{display:block;font-size:.83em;line-height:1.04}.hero h1 .notice-value--closed{color:#ff9b9b}.hero h1 .notice-value--info{color:#ffbb6c}.hero .subtitle[hidden]{display:none}.notice{grid-template-columns:7.7rem 1fr}.notice p{display:flex;align-items:center}.notice-status{display:inline-flex;align-items:center;min-height:2.15rem;padding:.4rem .7rem;border-radius:.45rem;color:#fff;font-weight:600}.notice--closed .notice-status{background:#b95761}.notice--info .notice-status{background:#db9136;color:#17130c}.notice--closed p:before{display:none}
+    .feature-tags{max-width:41rem}.about-image img{filter:saturate(1.16) brightness(1.1) contrast(1.06)}.about-image:after{background:linear-gradient(120deg,rgba(37,93,137,.13),rgba(8,14,24,.01) 60%,rgba(185,216,239,.11))}.map iframe{filter:grayscale(.08) saturate(1.12) contrast(1.04)}
+    .address-detail{margin:1rem 0 0;color:var(--muted);font-size:1rem}.contact-links{margin-top:2rem;gap:0}.contact-link{display:flex!important;align-items:center;justify-content:flex-start!important;gap:.85rem;padding:1rem 0!important}.contact-link svg{width:1.25rem;height:1.25rem;flex:none;stroke:var(--ice);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.contact-link small{display:block;margin-bottom:.08rem;color:var(--ice);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase}.contact-link span{color:var(--heading)}.opening-heading{margin:2.3rem 0 -.15rem;color:var(--ice);font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+    @media(max-width:639px){.notice{grid-template-columns:1fr;gap:.45rem}.notice time{font-size:.86rem}.notice-status{width:100%;justify-content:center}.contact h2{word-break:break-word}}
   </style>
 </head>
 <body>
@@ -76,11 +80,13 @@
       const fallbackText = 'Jsme klasické pánské kadeřnictví, které si na nic nehraje. Nedostanete u nás panáka whiskey ani horký ručník, za to Vás ostříháme v přijatelném čase a za přijatelnou cenu. Těšíme se na Vaši návštěvu.';
       const format = value => new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
       const period = (from, until) => from === until ? format(from) : `${format(from)}–${format(until)}`;
+      const weekday = value => { const result = new Intl.DateTimeFormat('cs-CZ', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(`${value}T12:00:00`)); return result.charAt(0).toUpperCase() + result.slice(1); };
       const featureTags = `<div class="feature-tags">
         <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg>Bez objednání</span>
         <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.2"/><path d="M6 9h.01M18 15h.01"/></svg>Pouze hotovost</span>
         <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="18" r="3"/><circle cx="11" cy="5" r="1.6"/><path d="M11 8v5h4l3 4M7 15h5l-2-4"/></svg>Bezbariérové</span>
-        <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16l1.5-5h13L20 16"/><path d="M3 16h18v3H3z"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/><path d="M7 11l1.5-3h7L17 11"/></svg>Parkování</span>
+        <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16l1.5-5h13L20 16"/><path d="M3 16h18v3H3z"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/><path d="M7 11l1.5-3h7L17 11"/></svg>Parkování ve vjezdu</span>
+        <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="6.5" r="2"/><circle cx="16" cy="7.5" r="2"/><path d="M4.5 17l2-5h3l1.5 3 2-2h4l2 4M7.5 12v4M16 13v4"/></svg>Děti vítány</span>
       </div>`;
       const start = async () => {
         const heading = document.querySelector('#uvod-title');
@@ -89,22 +95,37 @@
         const hero = document.querySelector('.hero');
         const callout = document.querySelector('.callout');
         if (callout) callout.innerHTML = featureTags;
+        const aboutCaption = document.querySelector('.about-image p');
+        if (aboutCaption) aboutCaption.textContent = 'Provozovna kadeřnictví od roku 2015';
+        const contactHeading = document.querySelector('.visit h2');
+        if (contactHeading) { contactHeading.innerHTML = 'Svatoplukova <em>2473/35</em>'; contactHeading.insertAdjacentHTML('afterend', '<p class="address-detail">796 01 Prostějov</p>'); }
+        const contactLinks = document.querySelector('.contact-links');
+        if (contactLinks) contactLinks.innerHTML = `<a class="contact-link" href="tel:+420735082419"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5l3.1-.7 1.7 4-1.9 1.5a15 15 0 0 0 7.8 7.8l1.5-1.9 4 1.7-.7 3.1a2 2 0 0 1-2.1 1.5C10.3 19.8 4.2 13.7 3.5 5.6A2 2 0 0 1 5 3.5z"/></svg><span><small>Telefon</small>+420 735 082 419</span></a><a class="contact-link" href="mailto:pvkadernictvi@email.cz"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg><span><small>E-mail</small>pvkadernictvi@email.cz</span></a><a class="contact-link" href="https://www.facebook.com/pvkadernictvi" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 21v-8h2.8l.4-3h-3.2V8.1c0-.9.3-1.5 1.6-1.5H18V3.9a23 23 0 0 0-2.1-.1c-2.1 0-3.6 1.3-3.6 3.7V10H9.8v3h2.5v8"/></svg><span><small>Facebook</small>Pánské kadeřnictví Prostějov</span></a>`;
+        const hours = document.querySelector('.hours');
+        if (hours && !document.querySelector('.opening-heading')) hours.insertAdjacentHTML('beforebegin', '<p class="opening-heading">Otevírací doba</p>');
+        const mapFrame = document.querySelector('.map iframe');
+        if (mapFrame) mapFrame.src = 'https://www.google.com/maps?q=Svatoplukova%202473%2F35%2C%20Prost%C4%9Bjov&z=16&output=embed';
+        const mapLabel = document.querySelector('.map-label');
+        if (mapLabel) mapLabel.firstChild.textContent = 'Svatoplukova 2473/35 ';
         try {
           const response = await fetch('data/provozni-zmeny.json', { cache: 'no-store' });
           if (!response.ok) throw new Error('Provozní změny nelze načíst.');
           const items = await response.json();
           const today = new Date(); today.setHours(0, 0, 0, 0);
           const active = items.filter(item => !item.until || new Date(`${item.until}T23:59:59`) >= today);
-          if (!active.length) { subtitle.textContent = fallbackText; return; }
+          if (!active.length) { subtitle.hidden = false; subtitle.textContent = fallbackText; return; }
           hero.dataset.hasUpdate = 'true';
           badge.innerHTML = `<i></i> ${active[0].title || 'Změna otevírací doby'}`;
+          const noticesPanel = document.querySelector('[data-notices]');
+          if (noticesPanel) noticesPanel.innerHTML = active.map(item => { const start = item.from || item.date; const status = item.type === 'closed' ? 'Mimořádně zavřeno' : item.hours; return `<article class="notice notice--${item.type || 'info'}"><time datetime="${start}">${weekday(start)}</time><p><span class="notice-status">${status}</span></p></article>`; }).join('');
           let position = 0;
           const render = () => {
             const item = active[position];
-            const parts = item.text.split(':');
+            const start = item.from || item.date;
+            const status = item.type === 'closed' ? 'Mimořádně zavřeno' : item.hours;
             heading.classList.remove('notice-cycle'); subtitle.classList.remove('notice-cycle');
-            heading.innerHTML = parts.length > 1 ? `${parts.shift()}: <em>${parts.join(':').trim()}</em>` : item.text;
-            subtitle.textContent = `${period(item.from || item.date, item.until || item.date)} · Otevírací doba: ${item.hours || 'dle sdělení'}`;
+            heading.innerHTML = `<span class="notice-date">${weekday(start)}</span><span class="notice-value notice-value--${item.type || 'info'}">${status}</span>`;
+            subtitle.hidden = true; subtitle.textContent = '';
             void heading.offsetWidth;
             heading.classList.add('notice-cycle'); subtitle.classList.add('notice-cycle');
             position = (position + 1) % active.length;
