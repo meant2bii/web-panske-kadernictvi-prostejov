@@ -35,6 +35,9 @@
     .feature-tags{max-width:41rem}.about-image img{filter:saturate(1.16) brightness(1.1) contrast(1.06)}.about-image:after{background:linear-gradient(120deg,rgba(37,93,137,.13),rgba(8,14,24,.01) 60%,rgba(185,216,239,.11))}.map iframe{filter:grayscale(.08) saturate(1.12) contrast(1.04)}
     .address-detail{margin:1rem 0 0;color:var(--muted);font-size:1rem}.contact-links{margin-top:2rem;gap:0}.contact-link{display:flex!important;align-items:center;justify-content:flex-start!important;gap:.85rem;padding:1rem 0!important}.contact-link svg{width:1.25rem;height:1.25rem;flex:none;stroke:var(--ice);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.contact-link small{display:block;margin-bottom:.08rem;color:var(--ice);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase}.contact-link span{color:var(--heading)}.opening-heading{margin:2.3rem 0 -.15rem;color:var(--ice);font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
     @media(max-width:639px){.notice{grid-template-columns:1fr;gap:.45rem}.notice time{font-size:.86rem}.notice-status{width:100%;justify-content:center}.contact h2{word-break:break-word}}
+    .opening-heading{margin:1.1rem 0 -.15rem}.hero h1 .notice-date,.hero h1 .notice-value{font-family:Onest,Arial,sans-serif;font-weight:500;font-style:normal}.hero h1 .notice-date{font-size:.5em}.notice-cycle{animation:notice-cycle 12s var(--ease) both!important}@keyframes notice-cycle{0%{opacity:0;transform:translateY(16px)}16%,82%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
+    .notice-jump{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--border);border-radius:999px;background:rgba(92,132,166,.28);padding:.4rem .75rem;color:#fff;text-decoration:none;transition:background .2s var(--ease),transform .2s var(--ease)}.notice-jump:hover,.notice-jump:focus-visible{background:rgba(117,157,191,.4);transform:translateY(-1px);outline:none}.notice-jump i{width:.42rem;height:.42rem;border-radius:50%;background:#ef9c45;box-shadow:0 0 14px rgba(239,156,69,.8)}.notice-hint{max-width:0;overflow:hidden;opacity:0;white-space:nowrap;color:var(--ice);font-size:.7rem;transition:max-width .3s var(--ease),opacity .2s var(--ease)}.notice-jump:hover .notice-hint,.notice-jump:focus-visible .notice-hint{max-width:13rem;opacity:1}.footer{min-height:3.3rem;display:grid;place-items:center}
+    @media(max-width:639px){.notice-hint{max-width:13rem;opacity:1;font-size:.64rem}}
   </style>
 </head>
 <body>
@@ -70,6 +73,7 @@
     fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const first=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now)[0];if(first?.title)document.querySelector('.badge').innerHTML=`<i></i> ${first.title}`}).catch(()=>{});
     // Edit 1: čisté původní logo s vlnkami a aktualizovaný základní text hero sekce.
     document.querySelector('.brand').innerHTML='<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 9c2.5 0 2.5 4.2 5 4.2S10 9 12 9s2.5 4.2 5 4.2S19.5 9 21.5 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2.5 15c2.5 0 2.5 4.2 5 4.2S10 15 12 15s2.5 4.2 5 4.2S19.5 15 21.5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".5"/></svg>Pánské kadeřnictví';
+    const setInterval = () => 0; // Starší rotátor zůstává vypnutý; používá se nový řadič níže.
     const defaultSubtitle='Poctivá péče o vlasy i vousy, příjemná atmosféra a férové ceny. Přijďte bez objednání kdykoliv během otevírací doby, rezervace nepřijímáme. Platba pouze v hotovosti.';
     const periodLabel=(start,end)=>start===end?formatDate(start):`${formatDate(start)}–${formatDate(end)}`;
     setTimeout(()=>fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const active=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now);const heading=document.querySelector('#uvod-title'),subtitle=document.querySelector('.subtitle'),badge=document.querySelector('.badge'),hero=document.querySelector('.hero');if(!active.length){subtitle.textContent=defaultSubtitle;return}hero.dataset.hasUpdate='true';badge.innerHTML=`<i></i> ${active[0].title||'Změna otevírací doby'}`;let index=0;const showChange=()=>{const item=active[index],parts=item.text.split(':');heading.classList.remove('notice-cycle');subtitle.classList.remove('notice-cycle');heading.innerHTML=parts.length>1?`${parts.shift()}: <em>${parts.join(':').trim()}</em>`:item.text;subtitle.textContent=`${periodLabel(item.from||item.date,item.until||item.date)} · Otevírací doba: ${item.hours||'dle sdělení'}`;void heading.offsetWidth;heading.classList.add('notice-cycle');subtitle.classList.add('notice-cycle');index=(index+1)%active.length};showChange();if(active.length>1)setInterval(showChange,6500)}).catch(()=>{document.querySelector('.subtitle').textContent=defaultSubtitle}),250);
@@ -95,6 +99,8 @@
         const hero = document.querySelector('.hero');
         const callout = document.querySelector('.callout');
         if (callout) callout.innerHTML = featureTags;
+        const footer = document.querySelector('.footer');
+        if (footer) footer.textContent = `© ${new Date().getFullYear()} Pánské kadeřnictví Prostějov`;
         const aboutCaption = document.querySelector('.about-image p');
         if (aboutCaption) aboutCaption.textContent = 'Provozovna kadeřnictví od roku 2015';
         const contactHeading = document.querySelector('.visit h2');
@@ -115,7 +121,7 @@
           const active = items.filter(item => !item.until || new Date(`${item.until}T23:59:59`) >= today);
           if (!active.length) { subtitle.hidden = false; subtitle.textContent = fallbackText; return; }
           hero.dataset.hasUpdate = 'true';
-          badge.innerHTML = `<i></i> ${active[0].title || 'Změna otevírací doby'}`;
+          badge.innerHTML = `<a class="notice-jump" href="#provoz"><i></i> ${active[0].title || 'Změna otevírací doby'}<span class="notice-hint">Zobrazit všechny změny ↓</span></a>`;
           const noticesPanel = document.querySelector('[data-notices]');
           if (noticesPanel) noticesPanel.innerHTML = active.map(item => { const start = item.from || item.date; const status = item.type === 'closed' ? 'Mimořádně zavřeno' : item.hours; return `<article class="notice notice--${item.type || 'info'}"><time datetime="${start}">${weekday(start)}</time><p><span class="notice-status">${status}</span></p></article>`; }).join('');
           let position = 0;
@@ -131,7 +137,7 @@
             position = (position + 1) % active.length;
           };
           render();
-          if (active.length > 1) window.setInterval(render, 6500);
+          if (active.length > 1) window.setInterval(render, 12000);
         } catch (error) { subtitle.textContent = fallbackText; }
       };
       window.addEventListener('load', () => window.setTimeout(start, 50), { once: true });
