@@ -15,32 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy-hosting:
-    name: Deploy to PIPNI hosting
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Upload website via FTP
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
-        run: |
-          set -euo pipefail
-          remote_base="${FTP_SERVER_DIR%/}"
-          find ./www -type f -print0 | while IFS= read -r -d '' file; do
-            remote_path="${file#./www/}"
-            curl --fail --silent --show-error --ftp-create-dirs \
-              --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
-              --upload-file "$file" \
-              "ftp://${FTP_SERVER}${remote_base}/${remote_path}"
-          done
-          curl --fail --silent --show-error \
-            --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
-            "ftp://${FTP_SERVER}${remote_base}/index.html" | grep -q 'notice-jump'
-
   deploy:
     runs-on: ubuntu-latest
     environment:

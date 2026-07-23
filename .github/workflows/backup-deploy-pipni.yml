@@ -1,0 +1,77 @@
+name: Backup and deploy PIPNI website
+
+on:
+  workflow_dispatch:
+    inputs:
+      backup_current_site:
+        description: Přesunout současný web do bckp před nasazením
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Backup and deploy to PIPNI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Move current website to backup
+        if: inputs.backup_current_site
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import ftplib
+          import os
+
+          ftp = ftplib.FTP(os.environ['FTP_SERVER'], timeout=30)
+          ftp.login(os.environ['FTP_USERNAME'], os.environ['FTP_PASSWORD'])
+          remote_dir = os.environ['FTP_SERVER_DIR'].rstrip('/') or '/'
+          ftp.cwd(remote_dir)
+          backup_root = f"bckp/pre-github-{os.environ['GITHUB_SHA'][:7]}"
+          try:
+              ftp.mkd('bckp')
+          except ftplib.error_perm:
+              pass
+          ftp.mkd(backup_root)
+          entries = []
+          for item in ftp.nlst():
+              name = item.rstrip('/').rsplit('/', 1)[-1]
+              if name and name not in {'.', '..', 'bckp'} and name not in entries:
+                  entries.append(name)
+          if not entries:
+              raise RuntimeError('V cílovém FTP adresáři nebyly nalezeny žádné soubory k záloze.')
+          for name in entries:
+              ftp.rename(name, f"{backup_root}/{name}")
+          ftp.quit()
+          print(f'Current website backed up to {remote_dir}/{backup_root}')
+          PY
+      - name: Upload current GitHub version
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          set -euo pipefail
+          remote_base="${FTP_SERVER_DIR%/}"
+          find ./www -type f -print0 | while IFS= read -r -d '' file; do
+            remote_path="${file#./www/}"
+            curl --fail --silent --show-error --ftp-create-dirs \
+              --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
+              --upload-file "$file" \
+              "ftp://${FTP_SERVER}${remote_base}/${remote_path}"
+          done
+          curl --fail --silent --show-error \
+            --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
+            "ftp://${FTP_SERVER}${remote_base}/index.html" \
+            --output /tmp/remote-index.html
+          grep -q 'notice-jump' /tmp/remote-index.html
