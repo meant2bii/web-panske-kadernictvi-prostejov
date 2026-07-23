@@ -38,6 +38,7 @@
     .opening-heading{margin:1.1rem 0 -.15rem}.hero h1 .notice-date,.hero h1 .notice-value{font-family:Onest,Arial,sans-serif;font-weight:500;font-style:normal}.hero h1 .notice-date{font-size:.5em}.notice-cycle{animation:notice-cycle 12s var(--ease) both!important}@keyframes notice-cycle{0%{opacity:0;transform:translateY(16px)}16%,82%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
     .notice-jump{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--border);border-radius:999px;background:rgba(92,132,166,.28);padding:.4rem .75rem;color:#fff;text-decoration:none;transition:background .2s var(--ease),transform .2s var(--ease)}.notice-jump:hover,.notice-jump:focus-visible{background:rgba(117,157,191,.4);transform:translateY(-1px);outline:none}.notice-jump i{width:.42rem;height:.42rem;border-radius:50%;background:#ef9c45;box-shadow:0 0 14px rgba(239,156,69,.8)}.notice-hint{max-width:0;overflow:hidden;opacity:0;white-space:nowrap;color:var(--ice);font-size:.7rem;transition:max-width .3s var(--ease),opacity .2s var(--ease)}.notice-jump:hover .notice-hint,.notice-jump:focus-visible .notice-hint{max-width:13rem;opacity:1}.footer{min-height:3.3rem;display:grid;place-items:center}
     @media(max-width:639px){.notice-hint{max-width:13rem;opacity:1;font-size:.64rem}}
+    .brand{max-width:calc(100% - 6.2rem);font-size:1rem}.brand-name{display:flex;flex-direction:column;line-height:1.08}.brand-name small{margin-top:.15rem;color:var(--ice);font-size:.61em;font-weight:500;letter-spacing:.02em}@media(min-width:640px){.brand{max-width:none;font-size:1.15rem}.brand-name{flex-direction:row;gap:.45rem;align-items:baseline}.brand-name small{margin:0;font-size:.7em}}
   </style>
 </head>
 <body>
@@ -99,6 +100,8 @@
         const hero = document.querySelector('.hero');
         const callout = document.querySelector('.callout');
         if (callout) callout.innerHTML = featureTags;
+        const brand = document.querySelector('.brand');
+        if (brand) brand.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 9c2.5 0 2.5 4.2 5 4.2S10 9 12 9s2.5 4.2 5 4.2S19.5 9 21.5 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2.5 15c2.5 0 2.5 4.2 5 4.2S10 15 12 15s2.5 4.2 5 4.2S19.5 15 21.5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".5"/></svg><span class="brand-name">Pánské Kadeřnictví <small>Prostějov Svatoplukova</small></span>';
         const footer = document.querySelector('.footer');
         if (footer) footer.textContent = `© ${new Date().getFullYear()} Pánské kadeřnictví Prostějov`;
         const aboutCaption = document.querySelector('.about-image p');
