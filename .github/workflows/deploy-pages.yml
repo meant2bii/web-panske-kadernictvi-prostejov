@@ -30,7 +30,8 @@ jobs:
           protocol: ftp
           port: 21
           local-dir: ./www/
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          # PIPNI po přihlášení otevírá přímo webový adresář /www.
+          server-dir: ./
           dangerous-clean-slate: false
 
   deploy:
