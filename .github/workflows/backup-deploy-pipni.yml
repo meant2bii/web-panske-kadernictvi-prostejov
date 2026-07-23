@@ -1,6 +1,8 @@
 name: Backup and deploy PIPNI website
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       backup_current_site:
@@ -20,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Move current website to backup
-        if: inputs.backup_current_site
+        if: github.event_name == 'workflow_dispatch' && inputs.backup_current_site
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
