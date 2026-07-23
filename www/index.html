@@ -111,7 +111,7 @@
           };
           render();
           if (active.length > 1) window.setInterval(render, 6500);
-        } catch (error) { subtitle.textContent = fallbackText; }
+        } catch (error) { console.error('Hero notices failed:', error); subtitle.textContent = fallbackText; }
       };
       window.addEventListener('load', () => window.setTimeout(start, 50), { once: true });
     })();
