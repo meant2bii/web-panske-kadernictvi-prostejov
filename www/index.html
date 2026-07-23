@@ -50,7 +50,7 @@
   <footer class="footer">© <span data-year></span> Pánské kadeřnictví Prostějov · střihy s dobrou náladou.</footer>
   <script>
     document.querySelectorAll('[data-words]').forEach((element,index)=>{const delay=index?1150:480,step=index?22:85;const words=element.dataset.words.split(' ');element.innerHTML=words.map((word,i)=>`<span class="word" style="transition-delay:${delay+i*step}ms">${word}&nbsp;</span>`).join('');requestAnimationFrame(()=>element.querySelectorAll('.word').forEach(word=>word.classList.add('show')))});
-    const notices=document.querySelector('[data-notices]'),formatDate=value=>new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'numeric.',year:'numeric'}).format(new Date(value+'T12:00:00'));
+    const notices=document.querySelector('[data-notices]'),formatDate=value=>new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'numeric',year:'numeric'}).format(new Date(value+'T12:00:00'));
     fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const active=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now);notices.innerHTML=active.length?active.map(item=>`<article class="notice notice--${item.type||'info'}"><time datetime="${item.date}">${formatDate(item.date)}</time><p>${item.text}</p></article>`).join(''):'<p class="loading">Dnes platí běžná otevírací doba.</p>'}).catch(()=>notices.innerHTML='<p class="loading">Dnes platí běžná otevírací doba.</p>');
     document.querySelector('[data-year]').textContent=new Date().getFullYear();
     const canvas=document.querySelector('.ink'),ctx=canvas.getContext('2d'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;let width,height,blobs=[],pointer={x:0,y:0,active:false};
@@ -74,7 +74,7 @@
     // Hero: samostatný, odolný řadič provozních změn.
     (() => {
       const fallbackText = 'Jsme klasické pánské kadeřnictví, které si na nic nehraje. Nedostanete u nás panáka whiskey ani horký ručník, za to Vás ostříháme v přijatelném čase a za přijatelnou cenu. Těšíme se na Vaši návštěvu.';
-      const format = value => new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric.', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
+      const format = value => new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
       const period = (from, until) => from === until ? format(from) : `${format(from)}–${format(until)}`;
       const featureTags = `<div class="feature-tags">
         <span class="feature-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg>Bez objednání</span>
@@ -111,7 +111,7 @@
           };
           render();
           if (active.length > 1) window.setInterval(render, 6500);
-        } catch (error) { console.error('Hero notices failed:', error); subtitle.textContent = fallbackText; }
+        } catch (error) { subtitle.textContent = fallbackText; }
       };
       window.addEventListener('load', () => window.setTimeout(start, 50), { once: true });
     })();
