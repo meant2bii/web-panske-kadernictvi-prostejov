@@ -1,0 +1,6 @@
+# Source archive kept locally; not part of the deployable website.
+all_files_mega/
+
+# Local editor and operating-system files.
+.DS_Store
+Thumbs.db

@@ -1,0 +1,23 @@
+[
+  {
+    "date": "2026-07-22",
+    "until": "2026-07-22",
+    "title": "Změna otevírací doby",
+    "type": "info",
+    "text": "Středa: otevřeno 6:30–12:00."
+  },
+  {
+    "date": "2026-07-25",
+    "until": "2026-07-25",
+    "title": "Změna otevírací doby",
+    "type": "closed",
+    "text": "Sobota: mimořádně zavřeno."
+  },
+  {
+    "date": "2026-07-27",
+    "until": "2026-07-27",
+    "title": "Změna otevírací doby",
+    "type": "info",
+    "text": "Pondělí: otevřeno 6:30–14:00."
+  }
+]
