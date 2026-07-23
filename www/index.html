@@ -26,6 +26,9 @@
     .map{position:relative;display:block;overflow:hidden;background:#172536;text-align:initial}.map iframe{display:block;width:100%;height:100%;min-height:15rem;border:0;filter:grayscale(.55) saturate(.62) contrast(1.08)}.map-label{position:absolute;z-index:1;left:1rem;right:1rem;bottom:1rem;padding:.7rem .85rem;border:1px solid var(--border);border-radius:.65rem;background:rgba(8,14,24,.78);backdrop-filter:blur(8px);color:#fff;font-size:.82rem}.map-label span{float:right;color:var(--ice)}
     .hero[data-has-update="true"] .badge{color:#fff;background:rgba(92,132,166,.28)}
     @media(min-width:640px){.brand-logo{width:10.5rem;height:3rem}.about-image img{min-height:23rem}.map iframe{min-height:21rem}}
+    .hero[data-has-update="true"] .badge i{background:#ef9c45;box-shadow:0 0 14px rgba(239,156,69,.8)}
+    .notice-cycle{animation:notice-cycle 6.5s var(--ease) both!important}.notice-cycle em{color:var(--ice)}
+    @keyframes notice-cycle{0%{opacity:0;transform:translateY(14px)}18%,76%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
   </style>
 </head>
 <body>
@@ -59,6 +62,11 @@
     // Je-li aktivní provozní změna, stává se hlavním sdělením hero sekce.
     fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const first=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now)[0];if(!first)return;const title=document.querySelector('#uvod-title'),subtitle=document.querySelector('.subtitle'),hero=document.querySelector('.hero');const parts=first.text.split(':');title.innerHTML=parts.length>1?`${parts.shift()}: <em>${parts.join(':').trim()}</em>`:first.text;subtitle.textContent=`Aktuální provozní změna platná ${formatDate(first.date)}. Další informace najdete níže.`;hero.dataset.hasUpdate='true'}).catch(()=>{});
     fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const first=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now)[0];if(first?.title)document.querySelector('.badge').innerHTML=`<i></i> ${first.title}`}).catch(()=>{});
+    // Edit 1: čisté původní logo s vlnkami a aktualizovaný základní text hero sekce.
+    document.querySelector('.brand').innerHTML='<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 9c2.5 0 2.5 4.2 5 4.2S10 9 12 9s2.5 4.2 5 4.2S19.5 9 21.5 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2.5 15c2.5 0 2.5 4.2 5 4.2S10 15 12 15s2.5 4.2 5 4.2S19.5 15 21.5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".5"/></svg>Pánské kadeřnictví';
+    const defaultSubtitle='Poctivá péče o vlasy i vousy, příjemná atmosféra a férové ceny. Přijďte bez objednání kdykoliv během otevírací doby, rezervace nepřijímáme. Platba pouze v hotovosti.';
+    const periodLabel=(start,end)=>start===end?formatDate(start):`${formatDate(start)}–${formatDate(end)}`;
+    setTimeout(()=>fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const active=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now);const heading=document.querySelector('#uvod-title'),subtitle=document.querySelector('.subtitle'),badge=document.querySelector('.badge'),hero=document.querySelector('.hero');if(!active.length){subtitle.textContent=defaultSubtitle;return}hero.dataset.hasUpdate='true';badge.innerHTML=`<i></i> ${active[0].title||'Změna otevírací doby'}`;let index=0;const showChange=()=>{const item=active[index],parts=item.text.split(':');heading.classList.remove('notice-cycle');subtitle.classList.remove('notice-cycle');heading.innerHTML=parts.length>1?`${parts.shift()}: <em>${parts.join(':').trim()}</em>`:item.text;subtitle.textContent=`${periodLabel(item.from||item.date,item.until||item.date)} · Otevírací doba: ${item.hours||'dle sdělení'}`;void heading.offsetWidth;heading.classList.add('notice-cycle');subtitle.classList.add('notice-cycle');index=(index+1)%active.length};showChange();if(active.length>1)setInterval(showChange,6500)}).catch(()=>{document.querySelector('.subtitle').textContent=defaultSubtitle}),250);
   </script>
 </body>
 </html>
