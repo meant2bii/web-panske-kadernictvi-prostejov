@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Generate Firmy.cz feed
+        run: node scripts/generate-firmy-feed.mjs
       - name: Move current website to backup
         if: github.event_name == 'workflow_dispatch' && inputs.backup_current_site
         env:

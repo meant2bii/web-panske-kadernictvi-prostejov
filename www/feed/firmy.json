@@ -1,0 +1,29 @@
+{
+  "exportDate": "2026-07-25T00:00:00.000Z",
+  "premises": [
+    {
+      "id": "pvkadernictvi-prostejov-13038169",
+      "ic": "74768832",
+      "name": "Pánské kadeřnictví Prostějov",
+      "description": "Pánské kadeřnictví včetně dalších kosmetických služeb.",
+      "address": {
+        "city": "Prostějov",
+        "street": "Svatoplukova",
+        "houseNumber": "2473/35",
+        "zip": "796 01"
+      },
+      "emails": [
+        { "email": "pvkadernictvi@email.cz", "role": "E-mail" }
+      ],
+      "phones": [
+        { "countryCode": "420", "number": "735082419", "role": "Telefon" }
+      ],
+      "socialNetworks": [
+        { "socialNetwork": "facebook", "url": "https://www.facebook.com/pvkadernictvi" }
+      ],
+      "url": "https://www.pvkadernictvi.eu/",
+      "openingHours": "Mo-Fr 06:30-18:00; Sa 06:30-11:30; Su off; 2026 Jul 25 off; 2026 Jul 27 06:30-14:00",
+      "filters": ["bezbarierove", "family-friendly", "s-parkovistem", "platba-v-hotovosti"]
+    }
+  ]
+}
