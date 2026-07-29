@@ -123,6 +123,7 @@
           const items = await response.json();
           const czechTime = () => Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Prague', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()).filter(part => part.type !== 'literal').map(part => [part.type, part.value]));
           const toMinutes = value => { const match = String(value || '').match(/(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})/); return match ? [Number(match[1]) * 60 + Number(match[2]), Number(match[3]) * 60 + Number(match[4])] : null; };
+          const formatTime = minutes => `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
           const renderBusinessStatus = () => {
             const current = czechTime();
             const date = `${current.year}-${current.month}-${current.day}`;
@@ -136,7 +137,7 @@
               const [opens, closes] = range;
               if (minutes >= opens && minutes < closes) {
                 const remaining = closes - minutes;
-                if (remaining <= 60) { status = 'soon'; text = `Zavírá za ${remaining} min`; } else { status = 'open'; text = 'Otevřeno'; }
+                if (remaining <= 60) { status = 'soon'; text = `Zavírá za ${remaining} min`; } else { status = 'open'; text = `Dnes otevřeno do ${formatTime(closes)}`; }
               } else if (minutes < opens && opens - minutes <= 60) { status = 'soon'; text = `Otevírá za ${opens - minutes} min`; }
             }
             badge.dataset.status = status;
