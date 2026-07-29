@@ -46,7 +46,7 @@
   <section class="hero" id="domu" aria-labelledby="uvod-title">
     <canvas class="ink" aria-hidden="true"></canvas><div class="scrim" aria-hidden="true"></div>
     <header class="nav"><a class="brand" href="#domu"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 9c2.5 0 2.5 4.2 5 4.2S10 9 12 9s2.5 4.2 5 4.2S19.5 9 21.5 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2.5 15c2.5 0 2.5 4.2 5 4.2S10 15 12 15s2.5 4.2 5 4.2S19.5 15 21.5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".5"/></svg>Pánské kadeřnictví</a><nav class="navlinks" aria-label="Hlavní navigace"><a href="#sluzby">Služby</a><a href="#o-nas">O nás</a><a href="#kontakt">Kontakt</a></nav><a class="pill" href="tel:+420735082419">Zavolat</a></header>
-    <div class="hero-content"><p class="badge"><i></i> Prostějov · Svatoplukova 35</p><h1 id="uvod-title" class="words" data-words="Střih, ve kterém se budete cítit dobře."></h1><p class="subtitle words" data-small data-words="Poctivá péče o vlasy i vousy, příjemná atmosféra a férové ceny. Přijďte tak, jak jste."></p><div class="callout"><div class="glassbar"><p>Bez objednání · zavolejte nám</p><a class="pill" href="tel:+420735082419">Kontakt</a></div></div></div>
+    <div class="hero-content"><p class="badge"><i></i> Prostějov · Svatoplukova 35</p><h1 id="uvod-title" class="words" data-words="Bez kudrlinek okolo."></h1><p class="subtitle words" data-small data-words="Klasické pánské kadeřnictví pro ty, kdo chtějí dobře vypadat za přijatelnou cenu a odejít s účesem, kvůli kterému jste přišli."></p><div class="callout"><div class="glassbar"><p>Bez objednání · zavolejte nám</p><a class="pill" href="tel:+420735082419">Kontakt</a></div></div></div>
     <a class="scroll" href="#obsah">Poznat kadeřnictví <span>↓</span></a>
   </section>
   <main id="obsah">
@@ -82,7 +82,7 @@
   <script>
     // Hero: samostatný, odolný řadič provozních změn.
     (() => {
-      const fallbackText = 'Jsme klasické pánské kadeřnictví, které si na nic nehraje. Nedostanete u nás panáka whiskey ani horký ručník, za to Vás ostříháme v přijatelném čase a za přijatelnou cenu. Těšíme se na Vaši návštěvu.';
+      const fallbackText = 'Klasické pánské kadeřnictví pro ty, kdo chtějí dobře vypadat za přijatelnou cenu a odejít s účesem, kvůli kterému jste přišli.';
       const format = value => new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
       const period = (from, until) => from === until ? format(from) : `${format(from)}–${format(until)}`;
       const weekday = value => { const result = new Intl.DateTimeFormat('cs-CZ', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(`${value}T12:00:00`)); return result.charAt(0).toUpperCase() + result.slice(1); };
