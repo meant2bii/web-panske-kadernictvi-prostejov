@@ -69,7 +69,7 @@
     document.querySelector('.brand').innerHTML='<img class="brand-logo" src="img/logo_cut.png" alt="Pánské kadeřnictví Prostějov">';
     document.querySelector('.about-image').innerHTML='<img src="img/foto_zvenku.jpg" alt="Vchod do Pánského kadeřnictví Prostějov"><p>Prostějov · od roku 2015</p>';
     // Google Maps lze vložit bez vlastního API klíče; odkaz v popisku otevře trasu v nové kartě.
-    document.querySelector('.map').outerHTML='<div class="map"><iframe title="Mapa — Pánské kadeřnictví Prostějov" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Svatoplukova%2035%2C%20Prost%C4%9Bjov&z=16&output=embed"></iframe><a class="map-label" href="https://www.google.com/maps/search/?api=1&query=Svatoplukova+35%2C+Prost%C4%9Bjov" target="_blank" rel="noopener noreferrer">Svatoplukova 35 <span>Otevřít trasu ↗</span></a></div>';
+    document.querySelector('.map').outerHTML='<div class="map"><iframe title="Mapa — Pánské kadeřnictví Prostějov" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=P%C3%A1nsk%C3%A9%20kade%C5%99nictv%C3%AD%2C%20Svatoplukova%202473%2F35%2C%20796%2001%20Prost%C4%9Bjov&z=17&output=embed"></iframe><a class="map-label" href="https://www.google.com/maps/search/?api=1&query=P%C3%A1nsk%C3%A9+kade%C5%99nictv%C3%AD%2C+Svatoplukova+2473%2F35%2C+796+01+Prost%C4%9Bjov" target="_blank" rel="noopener noreferrer">Pánské kadeřnictví <span>Otevřít profil v Mapách ↗</span></a></div>';
     // Je-li aktivní provozní změna, stává se hlavním sdělením hero sekce.
     fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const first=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now)[0];if(!first)return;const title=document.querySelector('#uvod-title'),subtitle=document.querySelector('.subtitle'),hero=document.querySelector('.hero');const parts=first.text.split(':');title.innerHTML=parts.length>1?`${parts.shift()}: <em>${parts.join(':').trim()}</em>`:first.text;subtitle.textContent=`Aktuální provozní změna platná ${formatDate(first.date)}. Další informace najdete níže.`;hero.dataset.hasUpdate='true'}).catch(()=>{});
     fetch('data/provozni-zmeny.json').then(response=>response.ok?response.json():Promise.reject()).then(items=>{const now=new Date();now.setHours(0,0,0,0);const first=items.filter(item=>!item.until||new Date(item.until+'T23:59:59')>=now)[0];if(first?.title)document.querySelector('.badge').innerHTML=`<i></i> ${first.title}`}).catch(()=>{});
@@ -114,9 +114,9 @@
         const hours = document.querySelector('.hours');
         if (hours && !document.querySelector('.opening-heading')) hours.insertAdjacentHTML('beforebegin', '<p class="opening-heading">Otevírací doba</p>');
         const mapFrame = document.querySelector('.map iframe');
-        if (mapFrame) mapFrame.src = 'https://www.google.com/maps?q=Svatoplukova%202473%2F35%2C%20Prost%C4%9Bjov&z=16&output=embed';
+        if (mapFrame) mapFrame.src = 'https://www.google.com/maps?q=P%C3%A1nsk%C3%A9%20kade%C5%99nictv%C3%AD%2C%20Svatoplukova%202473%2F35%2C%20796%2001%20Prost%C4%9Bjov&z=17&output=embed';
         const mapLabel = document.querySelector('.map-label');
-        if (mapLabel) mapLabel.firstChild.textContent = 'Svatoplukova 2473/35 ';
+        if (mapLabel) mapLabel.firstChild.textContent = 'Pánské kadeřnictví ';
         try {
           const response = await fetch('data/provozni-zmeny.json', { cache: 'no-store' });
           if (!response.ok) throw new Error('Provozní změny nelze načíst.');
