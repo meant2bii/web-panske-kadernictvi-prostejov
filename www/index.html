@@ -63,8 +63,8 @@
   </main>
   <footer class="footer">© <span data-year></span> Pánské kadeřnictví Prostějov <button class="cookie-settings" type="button" data-cookie-settings>Nastavení cookies</button></footer>
   <aside class="cookie-banner" data-cookie-banner aria-label="Nastavení analytických cookies" hidden>
-    <p>Používáme analytické cookies, abychom věděli, odkud návštěvníci přicházejí a zda využívají telefon nebo e-mail. Pomáhá nám to web zlepšovat.</p>
-    <div class="cookie-actions"><button type="button" data-cookie-reject>Odmítnout</button><button class="cookie-accept" type="button" data-cookie-accept>Povolit analytiku</button></div>
+    <p>Používáme analytické cookies, abychom věděli, odkud návštěvníci přicházejí. Pomáhá nám to web zlepšovat.</p>
+    <div class="cookie-actions"><button type="button" data-cookie-reject>Odmítnout</button><button class="cookie-accept" type="button" data-cookie-accept>Povolit</button></div>
   </aside>
   <script>
     document.querySelectorAll('[data-words]').forEach((element,index)=>{const delay=index?1150:480,step=index?22:85;const words=element.dataset.words.split(' ');element.innerHTML=words.map((word,i)=>`<span class="word" style="transition-delay:${delay+i*step}ms">${word}&nbsp;</span>`).join('');requestAnimationFrame(()=>element.querySelectorAll('.word').forEach(word=>word.classList.add('show')))});
